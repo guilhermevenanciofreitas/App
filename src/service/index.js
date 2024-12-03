@@ -4,7 +4,8 @@ import Swal from 'sweetalert2';
 
 export class Service {
 
-    url = "https://core-serverless.netlify.app/api/";
+    //url = "https://core-serverless.netlify.app/api/"
+    url = "http://localhost:3000/api/"
     
     Post = async (path, data) => {
 
