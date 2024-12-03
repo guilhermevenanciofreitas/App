@@ -6,7 +6,7 @@ export class Service {
 
     url = "https://core-serverless.netlify.app/api/";
     
-    async Post(path, data) {
+    Post = async (path, data) => {
 
         let config = {};
 
