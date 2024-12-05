@@ -236,6 +236,7 @@ export const appNavs = [
       },
     ]
   },*/
+  /*
   {
     eventKey: 'tasks',
     icon: <Icon as={FaTasks} />,
@@ -248,4 +249,5 @@ export const appNavs = [
     title: 'Integrações',
     to: '/integrations'
   },
+  */
 ];

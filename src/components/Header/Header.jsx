@@ -261,9 +261,11 @@ const Header = () => {
 
       <Stack className="header" spacing={8}>
 
+        {/*
         <Whisper placement="bottomEnd" trigger="click" ref={trigger} speaker={renderNoticeSpeaker}>
           <IconButton icon={<Badge content={5}><NoticeIcon style={{ fontSize: 20 }} /></Badge>} />
         </Whisper>
+        */}
 
         <Whisper placement="bottomEnd" trigger="click" ref={trigger} speaker={renderSettingSpeaker}>
           <IconButton icon={<GearIcon style={{ fontSize: 20 }} />} />
