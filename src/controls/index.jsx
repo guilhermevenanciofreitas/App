@@ -29,4 +29,5 @@ export { PhotoPicker } from './components/PhotoPicker';
 export { CustomBreadcrumb } from './custom/CustomBreadcrumb';
 export { CustomDateRangePicker } from './custom/CustomDateRangePicker';
 export { CustomFilter } from './custom/CustomFilter';
+export { CustomPagination } from './custom/CustomPagination';
 export { CustomSearch } from './custom/CustomSearch';

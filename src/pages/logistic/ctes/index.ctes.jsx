@@ -4,12 +4,12 @@ import _ from 'lodash'
 
 import dayjs from 'dayjs'
 
-import { Breadcrumb, Button, HStack, Nav, Panel, Stack } from 'rsuite';
+import { Breadcrumb, Button, HStack, Nav, Pagination, Panel, Stack } from 'rsuite';
 
 import { Divider } from 'rsuite';
 import PageContent from '../../../components/PageContent';
 
-import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomSearch, DataTable } from '../../../controls';
+import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomPagination, CustomSearch, DataTable } from '../../../controls';
 import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
 import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
@@ -94,19 +94,14 @@ class FinanceBankAccounts extends React.Component {
   }
 
   columns = [
-    { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão'},
-    { selector: (row) => row.nCT, name: 'Número'},
-    { selector: (row) => row.serieCT, name: 'Série'},
-    { selector: (row) => row.chaveCT, name: 'Chave de acesso'},
+    { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão', minWidth: '150px', maxWidth: '150px'},
+    { selector: (row) => row.nCT, name: 'Número', minWidth: '120px', maxWidth: '120px'},
+    { selector: (row) => row.serieCT, name: 'Série', minWidth: '60px', maxWidth: '60px'},
+    { selector: (row) => row.chaveCT, name: 'Chave de acesso', minWidth: '350px', maxWidth: '350px'},
     { selector: (row) => row.shippiment?.sender?.surname, name: 'Remetente'},
     { selector: (row) => row.recipient?.surname, name: 'Destinatário'},
-    { selector: (row) => row.cStat, name: 'Status'},
-    //{ selector: (row) => <DataTable.RowColor color={parseFloat(row.amount) > 0 ? 'springgreen' : 'tomato'}>{dayjs(row.entryAt).format('DD/MM/YYYY HH:mm')}</DataTable.RowColor>, name: 'Data'},
-    //{ selector: (row) => row.partner?.surname, name: 'Pagador / Beneficiário'},
-    //{ selector: (row) => row.currencyMethod?.name, name: 'Forma de pagamento'},
-    //{ selector: (row) => row.categorie?.name, name: 'Categoria'},
-    //{ selector: (row) => row.amount, name: 'Valor' },
-    //{ selector: (row) => <><img src={row.bankAccount?.bank?.image} style={{height: '20px'}} />&nbsp;&nbsp;{row.bankAccount.name || <>{row.bankAccount?.agency}-{row.bankAccount?.agencyDigit} / {row.bankAccount?.account}-{row.bankAccount?.accountDigit}</>}</>, name: 'Banco' },
+    { selector: (row) => new Intl.NumberFormat('pt-BR', {style: 'decimal', minimumFractionDigits: 2}).format(parseFloat(row.baseCalculo)), name: 'Valor', minWidth: '100px', maxWidth: '100px', right: true},
+    { selector: (row) => row.cStat, name: 'Status', minWidth: '100px', maxWidth: '100px'},
   ]
 
   render = () => {
@@ -148,9 +143,18 @@ class FinanceBankAccounts extends React.Component {
           <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditStatement} />
 
           <hr></hr>
+          
+          <Stack direction='row' alignItems='flexStart' justifyContent='space-between'>
+          
+            <Button appearance='primary' color='blue' startIcon={<FaUpload />} onClick={this.onUpload}>&nbsp;Upload</Button>
 
-          <Button appearance='primary' color='blue' startIcon={<FaUpload />} onClick={this.onUpload}>&nbsp;Upload</Button>
+            <CustomPagination total={this.state?.response?.count} limit={this.state?.request?.limit} activePage={this.state?.request?.offset + 1}
+              onChangePage={(offset) => this.setState({request: {...this.state.request, offset: offset - 1}}, () => this.onSearch())}
+              onChangeLimit={(limit) => this.setState({request: {...this.state.request, limit}}, () => this.onSearch())}
+            />
 
+          </Stack>
+          
         </PageContent>
       </>
     )

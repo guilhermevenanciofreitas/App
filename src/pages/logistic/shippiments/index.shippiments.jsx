@@ -141,7 +141,7 @@ class LogisticShippiments extends React.Component {
 
           <hr></hr>
 
-          <Button appearance='primary' color='blue' startIcon={<FaUpload />} onClick={this.onUpload}>&nbsp;Upload</Button>
+          <Button appearance='primary' color='blue' startIcon={<MdAddCircleOutline />} onClick={this.onUpload}>&nbsp;Novo romaneio</Button>
 
         </PageContent>
       </>
