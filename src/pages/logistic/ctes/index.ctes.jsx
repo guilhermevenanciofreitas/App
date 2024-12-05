@@ -17,10 +17,8 @@ import ViewStatement from './view.cte';
 import ViewUpload from './view.upload';
 
 const fields = [
-  { label: 'Todos', value: undefined },
-  { label: 'Pagador', value: 'code' },
-  { label: 'Beneficiário', value: 'description' },
-  { label: 'Observação', value: 'gtin' },
+  { label: 'Número', value: 'nCT' },
+  { label: 'Remetente', value: 'sender' },
 ]
 
 class Filter extends React.Component {
@@ -82,9 +80,9 @@ class FinanceBankAccounts extends React.Component {
   }
 
   onEditStatement = async (statement) => {
-    this.viewStatement.current.editStatement(statement.id).then((statement) => {
-      if (statement) this.onSearch()
-    })
+    //this.viewStatement.current.editStatement(statement.id).then((statement) => {
+    //  if (statement) this.onSearch()
+    //})
   }
 
   onNewStatement = () => {
@@ -119,7 +117,7 @@ class FinanceBankAccounts extends React.Component {
             
             <HStack>
 
-              <CustomSearch loading={this.state?.loading} fields={fields} value={this.state?.request?.search} onChange={(search) => this.setState({request: {search}}, () => this.onSearch())} />
+              <CustomSearch loading={this.state?.loading} fields={fields} defaultPicker={'nCT'} value={this.state?.request?.search} onChange={(search) => this.setState({request: {search}}, () => this.onSearch())} />
       
               {/*
               <CustomFilter.Whisper badge={_.size(this.state?.request?.filter)}>
