@@ -71,7 +71,7 @@ class RenderAdminSpeaker extends React.Component {
             <Dropdown.Item onClick={this.props.onProfile}>Perfil</Dropdown.Item>
             <Dropdown.Item onClick={this.props.onPasswordChange}>Alterar senha</Dropdown.Item>
             <Dropdown.Item divider />
-            <Dropdown.Item onClick={this.props.onLoggout}>Logout</Dropdown.Item>
+            {/*<Dropdown.Item onClick={this.props.onLoggout}>Logout</Dropdown.Item>*/}
           </Dropdown.Menu>
         </Popover>
       </>
