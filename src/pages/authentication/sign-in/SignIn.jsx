@@ -5,6 +5,7 @@ import { FaSignInAlt, FaCheck } from 'react-icons/fa'
 import toast from 'react-hot-toast'
 import _ from 'lodash'
 import { Service } from '../../../service'
+import { Col, Row } from 'react-grid-system'
 
 class SignUp extends React.Component {
 
@@ -79,23 +80,33 @@ class SignUp extends React.Component {
 
             <Form onSubmit={this.signIn}>
 
-              <Form.Group>
-                <Form.ControlLabel>E-mail</Form.ControlLabel>
-                <Form.Control name="name" type="text" value={this.state.email} onChange={(email) => this.setState({email})} style={{width: '100%'}} />
-              </Form.Group>
-
-              <Form.Group>
-                <Form.ControlLabel>
-                  <span>Senha</span>
+              <Row gutterWidth={0}>
+                <Col md={12}>
+                  <div className='form-control'>
+                    <label class="textfield-filled">
+                        <input type='text' value={this.state.email} onChange={(event) => this.setState({email: event.target.value})} />
+                        <span>E-mail</span>
+                    </label>
+                  </div>
+                </Col>
+                <Col md={12}>
+                  <div className='form-control'>
+                    <label class="textfield-filled">
+                        <input type='password' value={this.state.password} onChange={(event) => this.setState({password: event.target.value})} />
+                        <span>Senha</span>
+                    </label>
+                  </div>
                   <a style={{ float: 'right' }}>Esqueceu sua senha?</a>
-                </Form.ControlLabel>
-                <Form.Control name="name" type="password" value={this.state.password} onChange={(password) => this.setState({password})} style={{width: '100%'}} />
-              </Form.Group>
+                </Col>
+                
+              </Row>
+
               <Form.Group>
                 <Stack spacing={6} divider={<Divider vertical />}>
                   <Button appearance="primary" type='submit' disabled={this.state.loading}>{this.state.loading ? <><Loader />&nbsp;&nbsp; Entrando...</> : <><FaSignInAlt />&nbsp;&nbsp; Entrar</>}</Button>
                 </Stack>
               </Form.Group>
+
             </Form>
           </Panel>
         }

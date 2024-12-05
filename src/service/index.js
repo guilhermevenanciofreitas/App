@@ -1,13 +1,14 @@
 import { useLocation } from 'react-router-dom';
 import axios from "axios";
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
+import path from 'path-browserify'
 
 export class Service {
 
-    //url = "https://core-serverless.netlify.app/api/"
-    url = "http://localhost:3000/api/"
-    
-    Post = async (path, data) => {
+    Post = async (url, data, headers) => {
+
+        const env = import.meta.env.VITE_API_URL
+        const api_url = path.join(env, url)
 
         let config = {};
 
@@ -18,12 +19,13 @@ export class Service {
             if (authorization) {
                 config = {
                     headers: {
-                        'Authorization': `${authorization?.token}`
+                        'Authorization': `${authorization?.token}`,
+                        ...headers
                     },
                 }
             }
 
-            var response = await axios.post(this.url + path, data || {}, config)
+            var response = await axios.post(env + url, data || {}, config)
 
             if (authorization) {
                 authorization.lastAcess = response.headers['last-acess']
@@ -62,7 +64,7 @@ export class Service {
             Swal.fire({showCloseButton: true, title: 'Ops...', icon: 'error', text: message, confirmButtonColor: "#FFF", confirmButtonText: '<span style="color: rgba(88, 86, 214)">Quero abrir um chamado!</span>',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    console.log(this.url + path, data, config);
+                    console.log(api_url, data, config);
                     Swal.fire('', 'Chamado <b>#49812</b> aberto com sucesso!', 'success');
                 }
             });

@@ -13,8 +13,6 @@ import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomSearch, Da
 import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
 import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
-import ViewStatement from './view.cte';
-import ViewUpload from './view.upload';
 
 const fields = [
   { label: 'Todos', value: undefined },
@@ -48,7 +46,7 @@ class Filter extends React.Component {
 
 }
 
-class FinanceBankAccounts extends React.Component {
+class LogisticShippiments extends React.Component {
 
   viewUpload = React.createRef()
   viewStatement = React.createRef()
@@ -68,7 +66,7 @@ class FinanceBankAccounts extends React.Component {
   onSearch = () => {
     this.setState({loading: true}, async () => {
       try {
-        await new Service().Post('logistic/cte/ctes', this.state.request).then((result) => this.setState({...result.data})).finally(() => this.setState({loading: false}))
+        await new Service().Post('logistic/shippiment/shippiments', this.state.request).then((result) => this.setState({...result.data})).finally(() => this.setState({loading: false}))
       } catch (error) {
         toast.error(error.message)
       }
@@ -94,13 +92,11 @@ class FinanceBankAccounts extends React.Component {
   }
 
   columns = [
-    { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão'},
-    { selector: (row) => row.nCT, name: 'Número'},
-    { selector: (row) => row.serieCT, name: 'Série'},
-    { selector: (row) => row.chaveCT, name: 'Chave de acesso'},
-    { selector: (row) => row.shippiment?.sender?.surname, name: 'Remetente'},
-    { selector: (row) => row.recipient?.surname, name: 'Destinatário'},
-    { selector: (row) => row.cStat, name: 'Status'},
+    { selector: (row) => row.id, name: 'Id'},
+    { selector: (row) => row.documento_transporte, name: 'DT'},
+    { selector: (row) => row.sender?.surname, name: 'Remetente'},
+    { selector: (row) => row.peso, name: 'Peso'},
+    { selector: (row) => row.valor_frete, name: 'Valor frete'},
     //{ selector: (row) => <DataTable.RowColor color={parseFloat(row.amount) > 0 ? 'springgreen' : 'tomato'}>{dayjs(row.entryAt).format('DD/MM/YYYY HH:mm')}</DataTable.RowColor>, name: 'Data'},
     //{ selector: (row) => row.partner?.surname, name: 'Pagador / Beneficiário'},
     //{ selector: (row) => row.currencyMethod?.name, name: 'Forma de pagamento'},
@@ -113,10 +109,6 @@ class FinanceBankAccounts extends React.Component {
 
     return (
       <>
-
-        <ViewUpload ref={this.viewUpload} />
-
-        <ViewStatement ref={this.viewStatement} />
 
         <PageContent>
           
@@ -161,8 +153,8 @@ class Page extends React.Component {
 
   render = () => {
     return (
-      <Panel header={<CustomBreadcrumb menu={'Logística'} title={'Conhecimentos de Transporte'} />}>
-        <FinanceBankAccounts />
+      <Panel header={<CustomBreadcrumb menu={'Logística'} title={'Romaneios'} />}>
+        <LogisticShippiments />
       </Panel>
     )
   }

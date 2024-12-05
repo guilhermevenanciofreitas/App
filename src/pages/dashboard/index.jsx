@@ -9,7 +9,6 @@ const Page = () => {
   return (
     <Panel header={<CustomBreadcrumb title={'Dashboard'} />}>
       <PageToolbar />
-      <Dashboard />
       <Copyright />
     </Panel>
   );

@@ -13,6 +13,7 @@ export const appNavs = [
     title: 'Dashboard',
     to: '/dashboard'
   },
+  /*
   {
     eventKey: 'calendar',
     icon: <Icon as={FaCalendarWeek} />,
@@ -195,19 +196,24 @@ export const appNavs = [
         to: '/sale/nfe'
       },
     ]
-  },
+  },*/
   {
     eventKey: 'logistic',
     title: 'Logística',
     icon: <Icon as={FaTruck} />,
     children: [
       {
-        eventKey: 'cte',
+        eventKey: 'ctes',
         title: 'CT-e',
         to: '/logistic/ctes'
       },
+      {
+        eventKey: 'shippiments',
+        title: 'Romaneios',
+        to: '/logistic/shippiments'
+      },
     ]
-  },
+  },/*
   {
     eventKey: 'service',
     title: 'Serviço',
@@ -229,7 +235,7 @@ export const appNavs = [
         to: '/service/invoices'
       },
     ]
-  },
+  },*/
   {
     eventKey: 'tasks',
     icon: <Icon as={FaTasks} />,

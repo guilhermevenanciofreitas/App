@@ -45,6 +45,7 @@ import SettingPaymentMethods from './pages/setting/index.setting.payment-methods
 
 //Logistic
 import LogisticCtes from './pages/logistic/ctes/index.ctes';
+import LogisticShippiments from './pages/logistic/shippiments/index.shippiments'
 
 //Integration
 import Tasks from './pages/task/index.tasks'
@@ -113,6 +114,7 @@ const App = () => {
 
               {/*Logistic*/}
               <Route path="logistic/ctes" element={<LogisticCtes />} />
+              <Route path="logistic/shippiments" element={<LogisticShippiments />} />
 
               {/*Setting*/}
               <Route path="setting" element={<Setting />} />
@@ -136,7 +138,7 @@ const App = () => {
         </CustomProvider>
       </IntlProvider>
     </>
-  );
-};
+  )
+}
 
 export default App;
