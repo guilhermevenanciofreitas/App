@@ -20,6 +20,7 @@ import ViewNfes from './view.nfes';
 const fields = [
   { label: 'Número', value: 'nCT' },
   { label: 'Remetente', value: 'sender' },
+  { label: 'Chave de acesso', value: 'chaveCt' },
 ]
 
 class Filter extends React.Component {

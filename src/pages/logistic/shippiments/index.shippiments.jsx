@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import dayjs from 'dayjs'
 
-import { Breadcrumb, Button, HStack, Nav, Panel, Stack } from 'rsuite';
+import { Badge, Breadcrumb, Button, HStack, Nav, Panel, Stack } from 'rsuite';
 
 import { Divider } from 'rsuite';
 import PageContent from '../../../components/PageContent';
@@ -14,12 +14,10 @@ import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
 import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
 import ViewShippiment from './view.shippiment';
+import ViewCtes from './view.ctes';
 
 const fields = [
-  { label: 'Todos', value: undefined },
-  { label: 'Pagador', value: 'code' },
-  { label: 'Beneficiário', value: 'description' },
-  { label: 'Observação', value: 'gtin' },
+  { label: 'Documento de transporte', value: 'documentTransport' },
 ]
 
 class Filter extends React.Component {
@@ -49,7 +47,7 @@ class Filter extends React.Component {
 
 class LogisticShippiments extends React.Component {
 
-  viewShippiment = React.createRef()
+  viewCtes = React.createRef()
 
   componentDidMount = () => {
     this.onSearch()
@@ -85,18 +83,18 @@ class LogisticShippiments extends React.Component {
     })
   }
 
+  onViewCtes = async (cteNfes) => {
+    await this.viewCtes.current.show(cteNfes)
+    await this.onSearch()
+  }
+
   columns = [
     { selector: (row) => row.id, name: 'Id'},
     { selector: (row) => row.documento_transporte, name: 'Documento transporte'},
     { selector: (row) => row.sender?.surname, name: 'Remetente'},
     { selector: (row) => row.peso, name: 'Peso'},
     { selector: (row) => row.valor_frete, name: 'Valor frete'},
-    //{ selector: (row) => <DataTable.RowColor color={parseFloat(row.amount) > 0 ? 'springgreen' : 'tomato'}>{dayjs(row.entryAt).format('DD/MM/YYYY HH:mm')}</DataTable.RowColor>, name: 'Data'},
-    //{ selector: (row) => row.partner?.surname, name: 'Pagador / Beneficiário'},
-    //{ selector: (row) => row.currencyMethod?.name, name: 'Forma de pagamento'},
-    //{ selector: (row) => row.categorie?.name, name: 'Categoria'},
-    //{ selector: (row) => row.amount, name: 'Valor' },
-    //{ selector: (row) => <><img src={row.bankAccount?.bank?.image} style={{height: '20px'}} />&nbsp;&nbsp;{row.bankAccount.name || <>{row.bankAccount?.agency}-{row.bankAccount?.agencyDigit} / {row.bankAccount?.account}-{row.bankAccount?.accountDigit}</>}</>, name: 'Banco' },
+    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewCtes(row)} content={_.size(row.ctes)}></Badge>, name: '#', minWidth: '80px', maxWidth: '80px'},
   ]
 
   render = () => {
@@ -104,7 +102,7 @@ class LogisticShippiments extends React.Component {
     return (
       <>
 
-        <ViewShippiment ref={this.viewShippiment} />
+        <ViewCtes ref={this.viewCtes} />
 
         <PageContent>
           
@@ -112,7 +110,7 @@ class LogisticShippiments extends React.Component {
             
             <HStack>
 
-              <CustomSearch loading={this.state?.loading} fields={fields} value={this.state?.request?.search} onChange={(search) => this.setState({request: {search}}, () => this.onSearch())} />
+              <CustomSearch loading={this.state?.loading} fields={fields} defaultPicker={'documentTransport'} value={this.state?.request?.search} onChange={(search) => this.setState({request: {search}}, () => this.onSearch())} />
       
               {/*
               <CustomFilter.Whisper badge={_.size(this.state?.request?.filter)}>
