@@ -13,6 +13,7 @@ import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomSearch, Da
 import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
 import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
+import ViewShippiment from './view.shippiment';
 
 const fields = [
   { label: 'Todos', value: undefined },
@@ -48,8 +49,7 @@ class Filter extends React.Component {
 
 class LogisticShippiments extends React.Component {
 
-  viewUpload = React.createRef()
-  viewStatement = React.createRef()
+  viewShippiment = React.createRef()
 
   componentDidMount = () => {
     this.onSearch()
@@ -73,27 +73,21 @@ class LogisticShippiments extends React.Component {
     })
   }
 
-  onUpload = () => {
-    this.viewUpload.current.upload().then((ctes) => {
-      if (ctes) this.onSearch()
+  onEditShippiment = async (shippiment) => {
+    this.viewShippiment.current.editShippiment(shippiment.id).then((shippiment) => {
+      if (shippiment) this.onSearch()
     })
   }
 
-  onEditStatement = async (statement) => {
-    this.viewStatement.current.editStatement(statement.id).then((statement) => {
-      if (statement) this.onSearch()
-    })
-  }
-
-  onNewStatement = () => {
-    this.viewStatement.current.newStatement({bankAccount: this.state?.request?.bankAccount}).then((statement) => {
-      if (statement) this.onSearch()
+  onNewShippiment = () => {
+    this.viewShippiment.current.newShippiment({}).then((shippiment) => {
+      if (shippiment) this.onSearch()
     })
   }
 
   columns = [
     { selector: (row) => row.id, name: 'Id'},
-    { selector: (row) => row.documento_transporte, name: 'DT'},
+    { selector: (row) => row.documento_transporte, name: 'Documento transporte'},
     { selector: (row) => row.sender?.surname, name: 'Remetente'},
     { selector: (row) => row.peso, name: 'Peso'},
     { selector: (row) => row.valor_frete, name: 'Valor frete'},
@@ -109,6 +103,8 @@ class LogisticShippiments extends React.Component {
 
     return (
       <>
+
+        <ViewShippiment ref={this.viewShippiment} />
 
         <PageContent>
           
@@ -137,11 +133,11 @@ class LogisticShippiments extends React.Component {
             })}
           </Nav>
 
-          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditStatement} />
+          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditShippiment} />
 
           <hr></hr>
 
-          <Button appearance='primary' color='blue' startIcon={<MdAddCircleOutline />} onClick={this.onUpload}>&nbsp;Novo romaneio</Button>
+          <Button appearance='primary' color='blue' startIcon={<MdAddCircleOutline />} onClick={this.onNewShippiment}>&nbsp;Novo romaneio</Button>
 
         </PageContent>
       </>

@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 import dayjs from 'dayjs'
 
-import { Breadcrumb, Button, HStack, Nav, Pagination, Panel, Stack } from 'rsuite';
+import { Badge, Breadcrumb, Button, HStack, Nav, Pagination, Panel, Stack } from 'rsuite';
 
 import { Divider } from 'rsuite';
 import PageContent from '../../../components/PageContent';
@@ -15,6 +15,7 @@ import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
 import ViewStatement from './view.cte';
 import ViewUpload from './view.upload';
+import ViewNfes from './view.nfes';
 
 const fields = [
   { label: 'Número', value: 'nCT' },
@@ -49,7 +50,7 @@ class Filter extends React.Component {
 class FinanceBankAccounts extends React.Component {
 
   viewUpload = React.createRef()
-  viewStatement = React.createRef()
+  viewNfes = React.createRef()
 
   componentDidMount = () => {
     this.onSearch()
@@ -91,6 +92,11 @@ class FinanceBankAccounts extends React.Component {
     })
   }
 
+  onViewNfe = async (cteNfes) => {
+    await this.viewNfes.current.show(cteNfes)
+    await this.onSearch()
+  }
+
   columns = [
     { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão', minWidth: '150px', maxWidth: '150px'},
     { selector: (row) => row.nCT, name: 'Número', minWidth: '120px', maxWidth: '120px'},
@@ -100,6 +106,7 @@ class FinanceBankAccounts extends React.Component {
     { selector: (row) => row.recipient?.surname, name: 'Destinatário'},
     { selector: (row) => new Intl.NumberFormat('pt-BR', {style: 'decimal', minimumFractionDigits: 2}).format(parseFloat(row.baseCalculo)), name: 'Valor', minWidth: '100px', maxWidth: '100px', right: true},
     { selector: (row) => row.cStat, name: 'Status', minWidth: '100px', maxWidth: '100px'},
+    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', minWidth: '80px', maxWidth: '80px'},
   ]
 
   render = () => {
@@ -108,6 +115,8 @@ class FinanceBankAccounts extends React.Component {
       <>
 
         <ViewUpload ref={this.viewUpload} />
+
+        <ViewNfes ref={this.viewNfes} />
 
         <ViewStatement ref={this.viewStatement} />
 

@@ -11,6 +11,10 @@ export const Search = {
         return (await new Service().Post("search/partner", {search}))?.data
     },
 
+    sender: async (search) => {
+        return (await new Service().Post("search/sender", {search}))?.data
+    },
+
     bankAccount: async (search) => {
         return (await new Service().Post("search/bank-account", {search}))?.data
     },
