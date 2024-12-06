@@ -16,6 +16,7 @@ import { Service } from '../../../service';
 import ViewStatement from './view.cte';
 import ViewUpload from './view.upload';
 import ViewNfes from './view.nfes';
+import ViewCte from './view.cte';
 
 const fields = [
   { label: 'Número', value: 'nCT' },
@@ -50,6 +51,7 @@ class Filter extends React.Component {
 
 class FinanceBankAccounts extends React.Component {
 
+  viewCte = React.createRef()
   viewUpload = React.createRef()
   viewNfes = React.createRef()
 
@@ -81,15 +83,15 @@ class FinanceBankAccounts extends React.Component {
     })
   }
 
-  onEditStatement = async (statement) => {
-    //this.viewStatement.current.editStatement(statement.id).then((statement) => {
-    //  if (statement) this.onSearch()
-    //})
+  onEditCte = async (cte) => {
+    this.viewCte.current.editCte(cte.id).then((cte) => {
+      if (cte) this.onSearch()
+    })
   }
 
-  onNewStatement = () => {
-    this.viewStatement.current.newStatement({bankAccount: this.state?.request?.bankAccount}).then((statement) => {
-      if (statement) this.onSearch()
+  onNewCte = () => {
+    this.viewCte.current.newCte().then((cte) => {
+      if (cte) this.onSearch()
     })
   }
 
@@ -119,7 +121,7 @@ class FinanceBankAccounts extends React.Component {
 
         <ViewNfes ref={this.viewNfes} />
 
-        <ViewStatement ref={this.viewStatement} />
+        <ViewCte ref={this.viewCte} />
 
         <PageContent>
           
@@ -148,7 +150,7 @@ class FinanceBankAccounts extends React.Component {
             })}
           </Nav>
 
-          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditStatement} />
+          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditCte} />
 
           <hr></hr>
           

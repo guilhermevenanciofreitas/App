@@ -65,7 +65,7 @@ class ViewNfes extends React.Component {
 
     columns = [
         { selector: (row) => row.nfe.chaveNf, name: 'Chave de acesso'},
-        { selector: (row) => <IconButton color="red" size={'sm'} circle icon={<FaTrash />} appearance="ghost" onClick={() => this.onDeleteNfe(row)} />, name: ''},
+        { selector: (row) => <IconButton color="red" size={'sm'} circle icon={<FaTrash />} appearance="ghost" onClick={() => this.onDeleteNfe(row)} />, name: '', minWidth: '80px', maxWidth: '80px'},
    ]
 
     render = () => {

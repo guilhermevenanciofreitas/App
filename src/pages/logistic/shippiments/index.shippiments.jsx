@@ -17,6 +17,7 @@ import ViewShippiment from './view.shippiment';
 import ViewCtes from './view.ctes';
 
 const fields = [
+  { label: 'Número', value: 'code' },
   { label: 'Documento de transporte', value: 'documentTransport' },
 ]
 
@@ -47,6 +48,7 @@ class Filter extends React.Component {
 
 class LogisticShippiments extends React.Component {
 
+  viewShippiment = React.createRef()
   viewCtes = React.createRef()
 
   componentDidMount = () => {
@@ -92,8 +94,6 @@ class LogisticShippiments extends React.Component {
     { selector: (row) => row.id, name: 'Id'},
     { selector: (row) => row.documento_transporte, name: 'Documento transporte'},
     { selector: (row) => row.sender?.surname, name: 'Remetente'},
-    { selector: (row) => row.peso, name: 'Peso'},
-    { selector: (row) => row.valor_frete, name: 'Valor frete'},
     { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewCtes(row)} content={_.size(row.ctes)}></Badge>, name: '#', minWidth: '80px', maxWidth: '80px'},
   ]
 
@@ -102,6 +102,7 @@ class LogisticShippiments extends React.Component {
     return (
       <>
 
+        <ViewShippiment ref={this.viewShippiment} />
         <ViewCtes ref={this.viewCtes} />
 
         <PageContent>

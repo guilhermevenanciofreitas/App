@@ -9,7 +9,7 @@ import { Loading } from "../../../App";
 import _ from "lodash";
 import { Search } from "../../../search";
 
-class ViewStatement extends React.Component {
+class ViewCte extends React.Component {
 
     viewModal = React.createRef()
 
@@ -19,31 +19,24 @@ class ViewStatement extends React.Component {
         return this.viewModal.current.show()
     }
 
-    editStatement = async (id) => {
+    editCte = async (id) => {
         Loading.Show();
-        await new Service().Post('finance/bank-account/statement/detail', {id}).then((result) => this.setState({...result.data})).finally(() => Loading.Hide());
+        await new Service().Post('logistic/cte/detail', {id}).then((result) => this.setState({...result.data})).finally(() => Loading.Hide());
         return this.viewModal.current.show()
     }
 
     submit = async () => {
         this.setState({submting: true}, async () => {
 
-            const receivement = _.pick(this.state, [
+            const cte = _.pick(this.state, [
                 'id',
-                'documentNumber',
-                'currencyMethod.id',
-                'issueDate',
-                'dueDate',
-
-                'company.id',
-                'payer.id',
-                'bankAccount.id',
-
-                'categorie.id',
-                'amount',
+                'taker.id',
+                'recipient.id',
+                'origin.id',
+                'destiny.id'
             ])
 
-            await new Service().Post('finance/receivement/submit', receivement).then(async (result) => {
+            await new Service().Post('logistic/cte/submit', cte).then(async (result) => {
                 await toaster.push(<Message showIcon type='success'>Salvo com sucesso!</Message>, {placement: 'topEnd', duration: 5000 })
                 this.viewModal.current?.close(result.data)
             }).finally(() => this.setState({submting: false}));
@@ -59,87 +52,74 @@ class ViewStatement extends React.Component {
         return (
             <Form autoComplete='off' onSubmit={this.submit}>
                 <ViewModal ref={this.viewModal} size={820}>
-                    <Modal.Header><Modal.Title><Container>Lançamento</Container></Modal.Title></Modal.Header>
+                    <Modal.Header><Modal.Title><Container>Conhecimento</Container></Modal.Title></Modal.Header>
                     <Modal.Body>
                         <Row gutterWidth={0}>
-                            <Col md={5}>
+                            <Col md={3}>
                                 <div className='form-control'>
                                     <label class="textfield-filled">
-                                        <select value={this.state?.type} onChange={(event) => this.setState({type: event.target.value})}>
-                                            <option>[Selecione]</option>
-                                            <option>Entrada</option>
-                                            <option>Saída</option>
-                                        </select>
-                                        <span>Tipo</span>
+                                        <input type='text' value={this.state?.nCT} onChange={(event) => this.setState({nCT: event.target.value})} />
+                                        <span>Número</span>
+                                    </label>
+                                </div>
+                            </Col>
+                            <Col md={2}>
+                                <div className='form-control'>
+                                    <label class="textfield-filled">
+                                        <input type='text' value={this.state?.serieCT} onChange={(event) => this.setState({serieCT: event.target.value})} />
+                                        <span>Série</span>
                                     </label>
                                 </div>
                             </Col>
                             <Col md={7}>
                                 <div className='form-control'>
-                                    <AutoComplete label='Categoria' value={this.state?.categorie} text={(item) => item.name} onChange={(categorie) => this.setState({categorie})} onSearch={async (search) => await Search.contabilityCategorie(search)}>
+                                    <label class="textfield-filled">
+                                        <input type='text' value={this.state?.chaveCt} onChange={(event) => this.setState({chaveCt: event.target.value})} />
+                                        <span>Chave de acesso</span>
+                                    </label>
+                                </div>
+                            </Col>
+                            <Col md={6}>
+                                <div className='form-control'>
+                                    <AutoComplete label='Tomador' value={this.state?.taker} text={(item) => item.name} onChange={(taker) => this.setState({taker})} onSearch={async (search) => await Search.recipient(search)}>
                                         <AutoComplete.Result>
                                                 {(item) => <span>{item.name}</span>}
                                         </AutoComplete.Result>
                                     </AutoComplete>
                                 </div>
                             </Col>
-                            
-                            <Col md={3}>
-                                <div className='form-control'>
-                                    <label class="textfield-filled">
-                                        <input type='datetime-local' value={this.state?.entryAt} onChange={(event) => this.setState({entryAt: event.target.value})} />
-                                        <span>Data</span>
-                                    </label>
-                                </div>
-                            </Col>
                             <Col md={6}>
                                 <div className='form-control'>
-                                    <AutoComplete label='Forma de pagamento' value={this.state?.currencyMethod} text={(item) => item.name} onChange={(currencyMethod) => this.setState({currencyMethod})} onSearch={async (search) => await Search.receivementMethod(search)} renderItem={(item) => item.name}>
+                                    <AutoComplete label='Destinatário' value={this.state?.recipient} text={(item) => item.name} onChange={(recipient) => this.setState({recipient})} onSearch={async (search) => await Search.recipient(search)}>
                                         <AutoComplete.Result>
-                                                {(item) => <span>{item?.name}</span>}
+                                                {(item) => <span>{item.name}</span>}
                                         </AutoComplete.Result>
                                     </AutoComplete>
                                 </div>
                             </Col>
-                            <Col md={3}>
+                            <Col md={4}>
                                 <div className='form-control'>
-                                    <label class="textfield-filled">
-                                        <input type='text' value={Math.abs(this.state?.amount)} onChange={(event) => this.setState({amount: Math.abs(event.target.value)})} />
-                                        <span>Valor</span>
-                                    </label>
-                                </div>
-                            </Col>
-                            <Col md={6}>
-                                <div className='form-control'>
-                                    <AutoComplete label='Banco' value={this.state?.bankAccount} text={(item) => item.name || `${item.bank?.name} - ${item.agency}-${item.agencyDigit} / ${item.account}-${item.accountDigit}`} onChange={(bankAccount) => this.setState({bankAccount})} onSearch={async (search) => await Search.bankAccount(search)}>
+                                    <AutoComplete label='Origem' value={this.state?.origin} text={(item) => item.name} onChange={(origin) => this.setState({origin})} onSearch={async (search) => await Search.city(search)}>
                                         <AutoComplete.Result>
-                                                {(item) => <span><img src={item.bank?.image} style={{height: '20px'}} />&nbsp;&nbsp;{item.name || <>{item.bank?.name} - {item.agency}-{item.agencyDigit} / {item.account}-{item.accountDigit}</>}</span>}
+                                                {(item) => <span>{item.name}</span>}
                                         </AutoComplete.Result>
                                     </AutoComplete>
                                 </div>
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <div className='form-control'>
-                                    <AutoComplete label='Pagador' value={this.state?.partner} text={(item) => item.surname} onChange={(partner) => this.setState({partner})} onSearch={async (search) => await Search.partner(search)}>
+                                    <AutoComplete label='Destino' value={this.state?.destiny} text={(item) => item.name} onChange={(destiny) => this.setState({destiny})} onSearch={async (search) => await Search.city(search)}>
                                         <AutoComplete.Result>
-                                                {(item) => <span>{item.surname}</span>}
+                                                {(item) => <span>{item.name}</span>}
                                         </AutoComplete.Result>
                                     </AutoComplete>
                                 </div>
-                            </Col>
-                            <Col md={12}>
-                                    <div className='form-control'>
-                                        <label class="textfield-filled">
-                                            <textarea rows={2} type='text' value={this.state?.digitableLine} onChange={(event) => this.setState({digitableLine: event.target.value})} />
-                                            <span>Observações</span>
-                                        </label>
-                                    </div>
                             </Col>
                         </Row>
                         
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button appearance="primary" color='green' onClick={this.submit} disabled={this.state?.submting}>{this.state?.submting ? <><Loader /> &nbsp; Confirmando...</> : <><MdCheckCircleOutline /> &nbsp; Confirmar</>}</Button>
+                        <Button appearance="primary" color='green' onClick={this.submit} disabled={this.state?.submting}>{this.state?.submting ? <><Loader /> &nbsp; Salvando...</> : <><MdCheckCircleOutline /> &nbsp; Salvar</>}</Button>
                     </Modal.Footer>
                 </ViewModal>
             </Form>
@@ -149,4 +129,4 @@ class ViewStatement extends React.Component {
 
 }
 
-export default ViewStatement;
+export default ViewCte;

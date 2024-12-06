@@ -7,12 +7,20 @@ export const Search = {
         return (await new Service().Post("search/company", {search}))?.data
     },
 
+    city: async (search) => {
+        return (await new Service().Post("search/city", {search}))?.data
+    },
+
     partner: async (search) => {
         return (await new Service().Post("search/partner", {search}))?.data
     },
 
     sender: async (search) => {
         return (await new Service().Post("search/sender", {search}))?.data
+    },
+
+    recipient: async (search) => {
+        return (await new Service().Post("search/recipient", {search}))?.data
     },
 
     bankAccount: async (search) => {

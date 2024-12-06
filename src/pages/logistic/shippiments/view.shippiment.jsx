@@ -32,9 +32,7 @@ class ViewShippiment extends React.Component {
                 'id',
                 'documento_transporte',
                 'sender.id',
-                'quantidade_entrega',
-                'peso',
-                'valor_frete'
+                'proPred',
             ])
 
             await new Service().Post('logistic/shippiment/submit', receivement).then(async (result) => {
@@ -81,35 +79,11 @@ class ViewShippiment extends React.Component {
                                     </label>
                                 </div>
                             </Col>
-                            <Col md={2}>
-                                <div className='form-control'>
-                                    <label class="textfield-filled">
-                                        <input type='text' value={this.state?.quantidade_entrega} onChange={(event) => this.setState({quantidade_entrega: event.target.value})} />
-                                        <span>Quantidade entregas</span>
-                                    </label>
-                                </div>
-                            </Col>
-                            <Col md={2}>
-                                <div className='form-control'>
-                                    <label class="textfield-filled">
-                                        <input type='text' value={this.state?.peso} onChange={(event) => this.setState({peso: event.target.value})} />
-                                        <span>Peso</span>
-                                    </label>
-                                </div>
-                            </Col>
-                            <Col md={2}>
-                                <div className='form-control'>
-                                    <label class="textfield-filled">
-                                        <input type='text' value={this.state?.valor_frete} onChange={(event) => this.setState({valor_frete: event.target.value})} />
-                                        <span>Valor frete</span>
-                                    </label>
-                                </div>
-                            </Col>
                         </Row>
                         
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button appearance="primary" color='green' onClick={this.submit} disabled={this.state?.submting}>{this.state?.submting ? <><Loader /> &nbsp; Confirmando...</> : <><MdCheckCircleOutline /> &nbsp; Confirmar</>}</Button>
+                        <Button appearance="primary" color='green' onClick={this.submit} disabled={this.state?.submting}>{this.state?.submting ? <><Loader /> &nbsp; Salvando...</> : <><MdCheckCircleOutline /> &nbsp; Salvar</>}</Button>
                     </Modal.Footer>
                 </ViewModal>
             </Form>
