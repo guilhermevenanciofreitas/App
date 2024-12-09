@@ -33,11 +33,11 @@ class ViewCtes extends React.Component {
                 }
                 await toaster.push(<Message showIcon type='success'>Salvo com sucesso!</Message>, {placement: 'topEnd', duration: 5000 })
                 
-                //this.state?.cte?.cteNfes.push({nfe: {chaveNf: this.state.chaveNf}})
+                this.state?.shippiment.ctes.push({chaveCt: this.state.chaveCt})
 
-                //this.setState({cte: this.state?.cte})
+                this.setState({shippiment: this.state?.shippiment})
                 
-            }).finally(() => this.setState({chaveNf: '', submting: false}))
+            }).finally(() => this.setState({chaveCt: '', submting: false}))
 
         })
     }

@@ -212,6 +212,11 @@ export const appNavs = [
         title: 'Romaneios',
         to: '/logistic/shippiments'
       },
+      {
+        eventKey: 'trips',
+        title: 'Viagens',
+        to: '/logistic/trips'
+      },
     ]
   },/*
   {
