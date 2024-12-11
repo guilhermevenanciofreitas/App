@@ -11,7 +11,7 @@ import PageContent from '../../../components/PageContent';
 
 import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomPagination, CustomSearch, DataTable } from '../../../controls';
 import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
-import { FaFileImport, FaTransgender, FaUpload } from 'react-icons/fa';
+import { FaFileImport, FaFilePdf, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
 import ViewStatement from './view.cte';
 import ViewUpload from './view.upload';
@@ -100,6 +100,31 @@ class FinanceBankAccounts extends React.Component {
     await this.onSearch()
   }
 
+  onDacte = async (id, chaveCT) => {
+
+    await new Service().Post('logistic/cte/dacte', {id}).then((response) => {
+
+      if (response.data.pdf && typeof response.data.pdf === 'string') {
+        // Decode Base64 and create a Blob
+        const binaryString = atob(response.data.pdf); // Decodifica o Base64
+        const binaryData = new Uint8Array(
+          binaryString.split('').map((char) => char.charCodeAt(0))
+        );
+        const pdfBlob = new Blob([binaryData], { type: 'application/pdf' });
+
+        // Create download link
+        const downloadUrl = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${chaveCT}.pdf`; // Nome do arquivo baixado
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+    }).finally(() => this.setState({loading: false}))
+  }
+
   columns = [
     { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão', minWidth: '150px', maxWidth: '150px'},
     { selector: (row) => row.nCT, name: 'Número', minWidth: '120px', maxWidth: '120px'},
@@ -109,6 +134,7 @@ class FinanceBankAccounts extends React.Component {
     { selector: (row) => row.recipient?.surname, name: 'Destinatário'},
     { selector: (row) => new Intl.NumberFormat('pt-BR', {style: 'decimal', minimumFractionDigits: 2}).format(parseFloat(row.baseCalculo)), name: 'Valor', minWidth: '100px', maxWidth: '100px', right: true},
     { selector: (row) => row.cStat, name: 'Status', minWidth: '100px', maxWidth: '100px'},
+    { selector: (row) => <button onClick={() => this.onDacte(row.id, row.chaveCT)}><FaFilePdf /></button>, name: 'DACTE', minWidth: '70px', maxWidth: '70px'},
     { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', minWidth: '80px', maxWidth: '80px'},
   ]
 
