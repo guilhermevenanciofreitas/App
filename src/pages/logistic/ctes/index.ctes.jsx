@@ -4,19 +4,20 @@ import _ from 'lodash'
 
 import dayjs from 'dayjs'
 
-import { Badge, Breadcrumb, Button, HStack, Nav, Pagination, Panel, Stack } from 'rsuite';
+import { Badge, Breadcrumb, Button, HStack, IconButton, List, Nav, Pagination, Panel, Popover, Stack, Whisper } from 'rsuite';
 
 import { Divider } from 'rsuite';
 import PageContent from '../../../components/PageContent';
 
 import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomPagination, CustomSearch, DataTable } from '../../../controls';
 import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
-import { FaFileImport, FaFilePdf, FaTransgender, FaUpload } from 'react-icons/fa';
+import { FaEllipsisV, FaFileDownload, FaFileImport, FaFilePdf, FaMinus, FaPrint, FaTransgender, FaUpload } from 'react-icons/fa';
 import { Service } from '../../../service';
 import ViewStatement from './view.cte';
 import ViewUpload from './view.upload';
 import ViewNfes from './view.nfes';
 import ViewCte from './view.cte';
+import ViewDacte from './view.dacte';
 
 const fields = [
   { label: 'Número', value: 'nCT' },
@@ -54,6 +55,7 @@ class FinanceBankAccounts extends React.Component {
   viewCte = React.createRef()
   viewUpload = React.createRef()
   viewNfes = React.createRef()
+  viewDacte = React.createRef()
 
   componentDidMount = () => {
     this.onSearch()
@@ -103,7 +105,7 @@ class FinanceBankAccounts extends React.Component {
   onDacte = async (id, chaveCT) => {
 
     await new Service().Post('logistic/cte/dacte', {id}).then((response) => {
-
+  
       if (response.data.pdf && typeof response.data.pdf === 'string') {
         // Decode Base64 and create a Blob
         const binaryString = atob(response.data.pdf); // Decodifica o Base64
@@ -111,7 +113,7 @@ class FinanceBankAccounts extends React.Component {
           binaryString.split('').map((char) => char.charCodeAt(0))
         );
         const pdfBlob = new Blob([binaryData], { type: 'application/pdf' });
-
+  
         // Create download link
         const downloadUrl = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
@@ -121,21 +123,37 @@ class FinanceBankAccounts extends React.Component {
         link.click();
         document.body.removeChild(link);
       }
-
+  
     }).finally(() => this.setState({loading: false}))
   }
 
   columns = [
-    { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão', minWidth: '150px', maxWidth: '150px'},
-    { selector: (row) => row.nCT, name: 'Número', minWidth: '120px', maxWidth: '120px'},
+    //
+    { selector: (row) => <Whisper
+      trigger="click"
+      placement={'bottomStart'}
+      speaker={(props, ref) => {
+        return (
+          <Popover ref={ref} className={props.className} style={{width: '200px'}}>
+            <List size={'md'} hover style={{cursor: 'pointer'}}>
+              <List.Item onClick={() => this.onDacte(row.id, row.chaveCT)}><FaPrint /> Imprimir dacte</List.Item>
+              <List.Item><FaFileDownload /> Arquivo xml</List.Item>
+            </List>
+          </Popover>
+        )
+      }}
+    >
+      <IconButton className='hover-blue' size='sm' circle icon={<FaEllipsisV />} appearance="default" />
+    </Whisper>, minWidth: '60px', maxWidth: '60px', left: true},
+    { selector: (row) => dayjs(row.dhEmi).format('DD/MM/YYYY HH:mm'), name: 'Emissão', minWidth: '140px', maxWidth: '140px'},
+    { selector: (row) => row.nCT, name: 'Número', minWidth: '100px', maxWidth: '100px'},
     { selector: (row) => row.serieCT, name: 'Série', minWidth: '60px', maxWidth: '60px'},
     { selector: (row) => row.chaveCT, name: 'Chave de acesso', minWidth: '350px', maxWidth: '350px'},
     { selector: (row) => row.shippiment?.sender?.surname, name: 'Remetente'},
-    { selector: (row) => row.recipient?.surname, name: 'Destinatário'},
+    { selector: (row) => row.recipient?.surname, name: 'Destinatário', minWidth: '300px', maxWidth: '300px'},
     { selector: (row) => new Intl.NumberFormat('pt-BR', {style: 'decimal', minimumFractionDigits: 2}).format(parseFloat(row.baseCalculo)), name: 'Valor', minWidth: '100px', maxWidth: '100px', right: true},
-    { selector: (row) => row.cStat, name: 'Status', minWidth: '100px', maxWidth: '100px'},
-    { selector: (row) => <button onClick={() => this.onDacte(row.id, row.chaveCT)}><FaFilePdf /></button>, name: 'DACTE', minWidth: '70px', maxWidth: '70px'},
-    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', minWidth: '80px', maxWidth: '80px'},
+    //{ selector: (row) => <button onClick={() => this.onDacte(row.id, row.chaveCT)}><FaFilePdf /></button>, name: 'DACTE', minWidth: '70px', maxWidth: '70px'},
+    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', center: true, minWidth: '50px', maxWidth: '50px'},
   ]
 
   render = () => {
@@ -149,6 +167,8 @@ class FinanceBankAccounts extends React.Component {
 
         <ViewCte ref={this.viewCte} />
 
+        <ViewDacte ref={this.viewDacte} />
+
         <PageContent>
           
           <Stack spacing={'6px'} direction={'row'} alignItems={'flex-start'} justifyContent={'space-between'}>
@@ -157,12 +177,6 @@ class FinanceBankAccounts extends React.Component {
 
               <CustomSearch loading={this.state?.loading} fields={fields} defaultPicker={'nCT'} value={this.state?.request?.search} onChange={(search) => this.setState({request: {search}}, () => this.onSearch())} />
       
-              {/*
-              <CustomFilter.Whisper badge={_.size(this.state?.request?.filter)}>
-                {(props) => <Filter filter={this.state?.request?.filter} onApply={this.onApplyFilter} {...props} />}
-              </CustomFilter.Whisper>
-              */}
-
             </HStack>
 
           </Stack>
@@ -176,8 +190,8 @@ class FinanceBankAccounts extends React.Component {
             })}
           </Nav>
 
-          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditCte} />
-
+          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditCte} selectedRows={true} />
+      
           <hr></hr>
           
           <Stack direction='row' alignItems='flexStart' justifyContent='space-between'>
