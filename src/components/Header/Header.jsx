@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Link from '../NavLink'
 import ViewPassword from './view.password';
-import ViewUser from '../../pages/setting/view.user';
+import ViewUser from '../../views/setting/view.user';
 import { Loading } from '../../App';
 
 class RenderAdminSpeaker extends React.Component {

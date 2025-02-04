@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pagination } from 'rsuite'
 
-const ControlPagination = ({total, limit, activePage, onChangePage, onChangeLimit}) => {
+const ControlPagination = ({isLoading, total, limit, activePage, onChangePage, onChangeLimit}) => {
     return (
         <Pagination
             size={'md'} prev={true} next={true}
@@ -12,10 +12,13 @@ const ControlPagination = ({total, limit, activePage, onChangePage, onChangeLimi
             boundaryLinks={false}
             total={total}
             limit={limit}
-            limitOptions={[30,50,100]}
-            maxButtons={4}
+            limitOptions={[10,20,50,100]}
+            maxButtons={5}
             activePage={activePage}
-            onChangePage={onChangePage}
+            onChangePage={(offset) => {
+                if (isLoading) return
+                onChangePage(offset)
+            }}
             onChangeLimit={onChangeLimit}
         />
     )

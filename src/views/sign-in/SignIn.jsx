@@ -1,18 +1,17 @@
 import React from 'react'
 import { Form, Button, Panel, Stack, Divider, Steps, SelectPicker, Loader, Heading, toaster, Message } from 'rsuite'
-import Brand from '../../../components/Brand'
 import { FaSignInAlt, FaCheck } from 'react-icons/fa'
 import toast from 'react-hot-toast'
-import _ from 'lodash'
-import { Service } from '../../../service'
+import { Service } from '../../service'
 import { Col, Row } from 'react-grid-system'
+import _ from 'lodash'
 
 class SignUp extends React.Component {
 
   state = {
     companies: [],
-    email: 'guilherme9180@gmail.com',
-    password: '123',
+    email: 'guilherme.venancio',
+    password: '@Rped94ft',
     companyId: ''
   }
   
@@ -73,8 +72,6 @@ class SignUp extends React.Component {
     return (
       <Stack justifyContent="center" alignItems="center" direction="column" style={{height: '100vh'}}>
 
-        <Brand style={{ marginBottom: 10 }} />
-        
         {_.size(this.state.companies) == 0 &&
           <Panel bordered style={{ background: '#fff', width: 400 }} header={<div><Heading level={3}>Acesse sua conta!</Heading></div>}>
 

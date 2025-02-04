@@ -11,7 +11,7 @@ import { Loader, Placeholder } from 'rsuite';
 const ControlDataTable = ({height, dense = true, loading, columns, rows, noDataComponent, style, selectedRows, onItem, OnSort, placeholder = 8}) => {
 
   return (
-    <div style={style || {width: '100%', marginTop: '15px', maxHeight: '100%', height: height || 'calc(100vh - 370px)', overflow: loading ? 'hidden' : 'auto'}}>
+    <div style={style || {cursor: 'pointer', width: '100%', marginTop: '15px', maxHeight: '100%', height: height || 'calc(100vh - 370px)', overflow: loading ? 'hidden' : 'auto'}}>
 
       {loading && <div><Placeholder.Grid rows={30} columns={placeholder} active /></div>}
 
@@ -32,7 +32,10 @@ const ControlDataTable = ({height, dense = true, loading, columns, rows, noDataC
           onRowDoubleClicked={onItem}
           dense={dense}
           selectableRows={selectedRows}
-          onSort={(column, direction) => {if (!column?.sort) return;OnSort({column: column.sort, direction})}}
+          onSort={(column, direction) => {
+            if (!column?.sort) return;
+            OnSort({column: column.sort, direction})
+          }}
           highlightOnHover
           noHeader={false}
           progressPending={loading}

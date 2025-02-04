@@ -39,4 +39,8 @@ export const Search = {
         return (await new Service().Post("search/task-method", {search}))?.data
     },
 
+    cfop: async (search) => {
+        return (await new Service().Post("search/cfop", {search}))?.data
+    },
+
 }

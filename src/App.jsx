@@ -3,56 +3,45 @@ import { Routes, Route, useRoutes } from 'react-router-dom';
 import { CustomProvider, Loader } from 'rsuite';
 import enGB from 'rsuite/locales/en_GB';
 import Frame from './components/Frame';
-import DashboardPage from './pages/dashboard';
-import Error404Page from './pages/authentication/404';
-import Error403Page from './pages/authentication/403';
-import Error500Page from './pages/authentication/500';
-import Error503Page from './pages/authentication/503';
+import DashboardPage from './views/dashboard';
+import Error404Page from './views/errors/404';
 
-import SignInPage from './pages/authentication/sign-in';
-import SignUpPage from './pages/authentication/sign-up';
-import MembersPage from './pages/tables/members';
-import VirtualizedTablePage from './pages/tables/virtualized';
-import FormBasicPage from './pages/forms/basic';
-import FormWizardPage from './pages/forms/wizard';
+import SignInPage from './views/sign-in';
 
 import { appNavs } from './config';
 import { BrowserRouter } from 'react-router-dom';
 
 //Calendar
-import CalendarPage from './pages/calendar';
+import CalendarPage from './views/calendar';
 
 //Calleds
-import Calleds from './pages/calleds/index.calleds';
+import Calleds from './views/calleds/index.calleds';
 
 //Register
-import RegisterProducts from './pages/register/products/index.products';
+import RegisterProducts from './views/register/products/index.products';
 
 //Finance
-import FinanceCashiers from './pages/finance/cashiers/index.cashiers';
-import FinanceBankAccounts from './pages/finance/bank-accounts/index.bank-accounts';
-import FinancePayments from './pages/finance/payments/index.payments';
-import FinanceReceivements from './pages/finance/receivements/index.receivements';
-import FinanceStatements from './pages/finance/statements/index.statements';
+import FinanceCashiers from './views/finance/cashiers/index.cashiers';
+import FinanceBankAccounts from './views/finance/bank-accounts/index.bank-accounts';
+import FinancePayments from './views/finance/payments/index.payments';
+import FinanceReceivements from './views/finance/receivements/index.receivements';
+import FinanceStatements from './views/finance/statements/index.statements';
 
 //Settings
-import Setting from './pages/setting/index.setting';
-import SettingUsers from './pages/setting/index.setting.users';
-import SettingRoles from './pages/setting/index.setting.roles';
-import SettingBankAccounts from './pages/setting/index.setting.bank-accounts';
-import SettingContabilityCategories from './pages/setting/index.setting.contability-categories';
-import SettingPaymentMethods from './pages/setting/index.setting.payment-methods';
+import Setting from './views/setting/index.setting';
+import SettingUsers from './views/setting/index.setting.users';
+import SettingRoles from './views/setting/index.setting.roles';
+import SettingBankAccounts from './views/setting/index.setting.bank-accounts';
+import SettingContabilityCategories from './views/setting/index.setting.contability-categories';
+import SettingPaymentMethods from './views/setting/index.setting.payment-methods';
 
 //Logistic
-import LogisticCtes from './pages/logistic/ctes/index.ctes';
-import LogisticShippiments from './pages/logistic/shippiments/index.shippiments'
-import LogisticTrips from './pages/logistic/trips/index.trips'
+import LogisticCtes from './views/logistic/ctes/index.ctes';
+import LogisticShippiments from './views/logistic/shippiments/index.shippiments'
+import LogisticTrips from './views/logistic/trips/index.trips'
 
 //Integration
-import Tasks from './pages/task/index.tasks'
-
-//Integration
-import Integrations from './pages/integration/index.integrations';
+import Tasks from './views/task/index.tasks'
 
 import ptBR from 'rsuite/locales/pt_BR';
 import { IntlProvider } from 'react-intl';
@@ -89,7 +78,6 @@ const App = () => {
           <Routes>
             
             <Route path="sign-in" element={<SignInPage />} />
-            <Route path="sign-up" element={<SignUpPage />} />
 
             <Route path="/" element={<Frame navs={appNavs} />}>
 
@@ -128,9 +116,6 @@ const App = () => {
 
               {/*Task*/}
               <Route path="tasks" element={<Tasks />} />
-
-              {/*Integration*/}
-              <Route path="integrations" element={<Integrations />} />
 
             </Route>
             

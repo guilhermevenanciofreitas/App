@@ -1,14 +1,9 @@
 import React, { useEffect } from 'react'
 import { createRef, useState } from "react"
-//import { Icon, Spinner } from '../';
-import { Button, ButtonGroup, Dropdown, IconButton, Input, InputGroup, Loader, Popover, Whisper } from 'rsuite'
-import SearchIcon from '@rsuite/icons/Search'
-import { FaCircleNotch, FaClosedCaptioning, FaCloudRain, FaRegUserCircle, FaSearch, FaSpinner, FaSync, FaSyncAlt, FaTimes, FaTimesCircle } from "react-icons/fa"
+import { FaSearch, FaSyncAlt } from "react-icons/fa"
 import _ from 'lodash'
 
 import './AutoComplete.css'
-import { PickerPopup } from 'rsuite/esm/internals/Picker'
-//import { IconPlus, IconSearch } from '../icons';
 
 const Result = React.createContext()
 

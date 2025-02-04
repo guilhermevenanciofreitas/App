@@ -1,54 +1,26 @@
-import React from 'react';
-
-import _ from 'lodash'
+import React from 'react'
+import { Badge, Button, HStack, IconButton, List, Nav, Panel, Popover, Stack, Whisper } from 'rsuite'
 
 import dayjs from 'dayjs'
 
-import { Badge, Breadcrumb, Button, HStack, IconButton, List, Nav, Pagination, Panel, Popover, Stack, Whisper } from 'rsuite';
+import PageContent from '../../../components/PageContent'
 
-import { Divider } from 'rsuite';
-import PageContent from '../../../components/PageContent';
+import { CustomBreadcrumb, CustomPagination, CustomSearch, DataTable } from '../../../controls'
+import { FaEllipsisV, FaFileDownload, FaPrint, FaUpload } from 'react-icons/fa'
+import { Service } from '../../../service'
 
-import { CustomBreadcrumb, CustomDateRangePicker, CustomFilter, CustomPagination, CustomSearch, DataTable } from '../../../controls';
-import { MdAddCircleOutline, MdCheckCircleOutline } from 'react-icons/md';
-import { FaEllipsisV, FaFileDownload, FaFileImport, FaFilePdf, FaMinus, FaPrint, FaTransgender, FaUpload } from 'react-icons/fa';
-import { Service } from '../../../service';
-import ViewStatement from './view.cte';
-import ViewUpload from './view.upload';
-import ViewNfes from './view.nfes';
-import ViewCte from './view.cte';
-import ViewDacte from './view.dacte';
+import ViewUpload from './view.upload'
+import ViewNfes from './view.nfes'
+import ViewCte from './view.cte'
+import ViewDacte from './view.dacte'
+
+import _ from 'lodash'
 
 const fields = [
   { label: 'Número', value: 'nCT' },
   { label: 'Remetente', value: 'sender' },
   { label: 'Chave de acesso', value: 'chaveCt' },
 ]
-
-class Filter extends React.Component {
-
-  state = {
-    filter: {...this.props.filter}
-  }
-
-  data = [
-    { label: 'Ativo', value: 'active' },
-    { label: 'Inativo', value: 'inactive' },
-  ]
-
-  onApply = () => {
-    this.props.onClose(this.props.onApply(this.state.filter))
-  }
-
-  render = () => (
-    <CustomFilter>
-      <CustomFilter.Item label={'Situação'} data={this.data} filter={this.state.filter} field={'situation'} onChange={(filter) => this.setState({filter})} />
-        <hr />
-      <Button appearance={'primary'} color='green' onClick={this.onApply}><MdCheckCircleOutline />&nbsp;Aplicar</Button>
-    </CustomFilter>
-  )
-
-}
 
 class FinanceBankAccounts extends React.Component {
 
@@ -74,7 +46,7 @@ class FinanceBankAccounts extends React.Component {
       try {
         await new Service().Post('logistic/cte/ctes', this.state.request).then((result) => this.setState({...result.data})).finally(() => this.setState({loading: false}))
       } catch (error) {
-        toast.error(error.message)
+        console.error(error.message)
       }
     })
   }
@@ -85,8 +57,8 @@ class FinanceBankAccounts extends React.Component {
     })
   }
 
-  onEditCte = async (cte) => {
-    this.viewCte.current.editCte(cte.id).then((cte) => {
+  onEditCTe = async (cte) => {
+    this.viewCte.current.editCTe(cte.id).then((cte) => {
       if (cte) this.onSearch()
     })
   }
@@ -99,7 +71,7 @@ class FinanceBankAccounts extends React.Component {
 
   onViewNfe = async (cteNfes) => {
     await this.viewNfes.current.show(cteNfes)
-    await this.onSearch()
+    this.onSearch()
   }
 
   onDacte = async (id, chaveCT) => {
@@ -152,8 +124,7 @@ class FinanceBankAccounts extends React.Component {
     { selector: (row) => row.shippiment?.sender?.surname, name: 'Remetente'},
     { selector: (row) => row.recipient?.surname, name: 'Destinatário', minWidth: '300px', maxWidth: '300px'},
     { selector: (row) => new Intl.NumberFormat('pt-BR', {style: 'decimal', minimumFractionDigits: 2}).format(parseFloat(row.baseCalculo)), name: 'Valor', minWidth: '100px', maxWidth: '100px', right: true},
-    //{ selector: (row) => <button onClick={() => this.onDacte(row.id, row.chaveCT)}><FaFilePdf /></button>, name: 'DACTE', minWidth: '70px', maxWidth: '70px'},
-    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', center: true, minWidth: '50px', maxWidth: '50px'},
+    { selector: (row) => <Badge style={{cursor: 'pointer'}} color={'blue'} onClick={() => this.onViewNfe(row)} content={_.size(row.cteNfes)}></Badge>, name: '#', center: true, minWidth: '55px', maxWidth: '55px'},
   ]
 
   render = () => {
@@ -190,15 +161,15 @@ class FinanceBankAccounts extends React.Component {
             })}
           </Nav>
 
-          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditCte} selectedRows={true} />
+          <DataTable columns={this.columns} rows={this.state?.response?.rows} loading={this.state?.loading} onItem={this.onEditCTe} selectedRows={true} />
       
           <hr></hr>
           
           <Stack direction='row' alignItems='flexStart' justifyContent='space-between'>
           
-            <Button appearance='primary' color='blue' startIcon={<FaUpload />} onClick={this.onUpload}>&nbsp;Upload</Button>
+            {/*<Button appearance='primary' color='blue' startIcon={<FaUpload />} onClick={this.onUpload}>&nbsp;Upload</Button>*/}
 
-            <CustomPagination total={this.state?.response?.count} limit={this.state?.request?.limit} activePage={this.state?.request?.offset + 1}
+            <CustomPagination isLoading={this.state?.loading} total={this.state?.response?.count} limit={this.state?.request?.limit} activePage={this.state?.request?.offset + 1}
               onChangePage={(offset) => this.setState({request: {...this.state.request, offset: offset - 1}}, () => this.onSearch())}
               onChangeLimit={(limit) => this.setState({request: {...this.state.request, limit}}, () => this.onSearch())}
             />
