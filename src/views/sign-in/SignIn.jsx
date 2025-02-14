@@ -9,10 +9,12 @@ import { Exception } from '../../utils/exception'
 class SignUp extends React.Component {
 
   state = {
-    companies: [],
+    companyBusiness: [],
+    company: [],
     email: 'guilherme.venancio@tcltransporte.com.br',
     password: '@Rped94ft',
-    companyId: ''
+    companyBusinessId: '',
+    companyId: '',
   }
   
   signIn = async () => {
@@ -29,17 +31,11 @@ class SignUp extends React.Component {
     }
   }
 
-  companyCorporationApply = async() => {
+  companyBusinessChange = async(companyBusinessId) => {
     try {
 
-      this.setState({loading: true})
-
-      if (_.isEmpty(this.state?.companyId)) {
-        await toaster.push(<Message showIcon type='warning'>Informe a empresa!</Message>, {placement: 'topCenter', duration: 5000 })
-        return
-      }
-  
-      await new Service().Post('login/sign-in', {email: this.state.email, password: this.state.password, companyCorporationId: this.state.companyCorporationId})
+      this.setState({companyBusinessId, loading: true})
+      const signIn = await new Service().Post('login/sign-in', {email: this.state.email, password: this.state.password, companyBusinessId})
       this.authorize(signIn)
 
     } catch(error) {
@@ -49,17 +45,11 @@ class SignUp extends React.Component {
     }
   }
 
-  companyApply = async() => {
+  companyChange = async(companyId) => {
     try {
 
-      this.setState({loading: true})
-
-      if (_.isEmpty(this.state?.companyId)) {
-        await toaster.push(<Message showIcon type='warning'>Informe a filial!</Message>, {placement: 'topCenter', duration: 5000 })
-        return
-      }
-  
-      await new Service().Post('login/sign-in', {email: this.state.email, password: this.state.password, companyId: this.state.companyId})
+      this.setState({companyId, loading: true})
+      const signIn = await new Service().Post('login/sign-in', {email: this.state.email, password: this.state.password, companyBusinessId: this.state.companyBusinessId, companyId})
       this.authorize(signIn)
 
     } catch(error) {
@@ -85,12 +75,14 @@ class SignUp extends React.Component {
 
     //companyCorporation
     if (signIn?.status == 202) {
-      this.setState({...this.state, companies: _.map(signIn.data, (item) => { return {label: item.name, value: item.id} })});
+      const companyBusiness = _.map(signIn.data, (item) => { return {label: item.description, value: item.id} })
+      this.setState({...this.state, companyBusiness});
     }
 
     //company
     if (signIn?.status == 203) {
-      this.setState({...this.state, companies: _.map(signIn.data, (item) => { return {label: item.name, value: item.id} })});
+      const company = _.map(signIn.data, (item) => { return {label: item.surname, value: item.id} })
+      this.setState({...this.state, company});
     }
 
   }
@@ -100,11 +92,9 @@ class SignUp extends React.Component {
     return (
       <Stack justifyContent="center" alignItems="center" direction="column" style={{height: '100vh'}}>
 
-        {_.size(this.state?.companies) == 0 &&
+        {_.size(this.state?.companyBusiness) == 0 &&
           <Panel bordered style={{ background: '#fff', width: 400 }} header={<div><Heading level={3}>Acesse sua conta!</Heading></div>}>
-
             <Form onSubmit={this.signIn}>
-
               <Row gutterWidth={0}>
                 <Col md={12}>
                   <div className='form-control'>
@@ -135,9 +125,9 @@ class SignUp extends React.Component {
           </Panel>
         }
 
-        {_.size(this.state?.companies) >= 1 &&
+        {_.size(this.state?.companyBusiness) >= 1 &&
           <Panel bordered style={{ background: '#fff', width: 400 }}>
-            <Form onSubmit={this.companyApply}>
+            <Form>
               <Steps current={1}>
                 <Steps.Item title="Entrar" />
                 <Steps.Item title="Empresa" />
@@ -150,14 +140,18 @@ class SignUp extends React.Component {
                 <Form.ControlLabel>
                   <span>Empresa</span>
                 </Form.ControlLabel>
-                <SelectPicker data={this.state?.companies} value={this.state?.companyId} onChange={(companyId) => this.setState({companyId})} searchable={false} style={{ width: '100%' }} placeholder="[Selecione]"/>
+                <SelectPicker data={this.state?.companyBusiness} value={this.state?.companyBusinessId} onChange={this.companyBusinessChange} searchable={false} style={{ width: '100%' }} placeholder="[Selecione]"/>
               </Form.Group>
 
-              <Form.Group>
-                <Stack spacing={6} justifyContent='flex-end' divider={<Divider vertical />}>
-                  <Button appearance="primary" type='submit' disabled={this.state?.loading}>{this.state?.loading ? <><Loader />&nbsp;&nbsp; Confirmando...</> : <><FaCheck />&nbsp;&nbsp; Confirmar</>}</Button>
-                </Stack>
-              </Form.Group>
+              {_.size(this.state?.company) >= 1 &&
+                <Form.Group>
+                  <Form.ControlLabel>
+                    <span>Filial</span>
+                  </Form.ControlLabel>
+                  <SelectPicker data={this.state?.company} value={this.state?.companyId} onChange={this.companyChange} searchable={false} style={{ width: '100%' }} placeholder="[Selecione]"/>
+                </Form.Group>
+              }
+
             </Form>
           </Panel>
         }
