@@ -53,26 +53,24 @@ export class Service {
 
             //Sessão expirada
             if (error?.response?.status == 400) {
+                const message = error.response.data.message
                 localStorage.removeItem('Authorization')
                 const to = window.location.hash.slice(1)
                 window.location.href = `/sign-in`
-                throw new Error(error.response.data.message)
+                throw new Error(message)
             }
 
             //Erro desconhecido
-            const message = '[500] - Ocorreu um erro inesperado!'
-            Swal.fire({showCloseButton: true, title: 'Ops...', icon: 'error', text: message, confirmButtonColor: "#FFF"});
-            /*
-            const message = '[500] - Ocorreu um erro inesperado!'
-            Swal.fire({showCloseButton: true, title: 'Ops...', icon: 'error', text: message, confirmButtonColor: "#FFF", confirmButtonText: '<span style="color: rgba(88, 86, 214)">Quero abrir um chamado!</span>',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    console.log(api_url, data, config);
-                    Swal.fire('', 'Chamado <b>#49812</b> aberto com sucesso!', 'success');
-                }
-            });
-            */
-            throw new Error(message);
+            if (error?.response?.status == 500) {
+                const message = '[500] - Ocorreu um erro inesperado!'
+                Swal.fire({showCloseButton: true, title: 'Ops...', icon: 'error', text: message, confirmButtonColor: "#FFF", confirmButtonText: '<span style="color: rgba(88, 86, 214)">Quero abrir um chamado!</span>',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire('', 'Chamado <b>#49812</b> aberto com sucesso!', 'success')
+                    }
+                })
+                throw new Error(JSON.stringify(error?.response?.data))
+            }
 
         }
     }

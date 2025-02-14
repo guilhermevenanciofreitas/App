@@ -64,9 +64,9 @@ class ViewShippiment extends React.Component {
                             </Col>
                             <Col md={5}>
                                 <div className='form-control'>
-                                    <AutoComplete label='Remetente' value={this.state?.sender} text={(item) => item.name} onChange={(sender) => this.setState({sender})} onSearch={async (search) => await Search.sender(search)}>
+                                    <AutoComplete label='Remetente' value={this.state?.sender} text={(item) => `${item.cpfCnpj} - ${item.name}`} onChange={(sender) => this.setState({sender})} onSearch={async (search) => await Search.sender(search)}>
                                         <AutoComplete.Result>
-                                                {(item) => <span>{item.name}</span>}
+                                            {(item) => <span>{item.cpfCnpj} - {item.name}</span>}
                                         </AutoComplete.Result>
                                     </AutoComplete>
                                 </div>
